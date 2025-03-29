@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Caianinho</title>
+    <style>
+        body {
+            background-color: #4169E1; /* Azul anil */
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            color: black;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .register-btn {
+            background-color: #008CBA;
+            color: white;
+        }
+        .menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 200px;
+            background-color: #f4f4f4;
+            height: 100%;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .menu h3 {
+            margin-top: 0;
+        }
+        .main-content {
+            margin-right: 220px;
+            padding: 20px;
+        }
+        .big-button {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 18px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .big-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Portal Caianinho</h1>
+    <div class="container">
+        <form id="login-form">
+            <label for="username">Usuário:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Senha:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit" class="login-btn">Login</button>
+            <button type="button" class="register-btn" onclick="showRegisterForm()">Registrar-se</button>
+        </form>
+        <div id="register-form" style="display:none;">
+            <h2>Registrar-se</h2>
+            <form>
+                <label for="nome">Nome:</label><br>
+                <input type="text" id="nome" name="nome" required><br><br>
+                <label for="data_nascimento">Data de Nascimento:</label><br>
+                <input type="date" id="data_nascimento" name="data_nascimento" required><br><br>
+                <label for="telefone">Telefone:</label><br>
+                <input type="tel" id="telefone" name="telefone" required><br><br>
+                <label for="genero">Gênero:</label><br>
+                <select id="genero" name="genero" required>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                    <option value="outro">Outro</option>
+                </select><br><br>
+                <label for="escala">Escala:</label><br>
+                <input type="text" id="escala" name="escala" required><br><br>
+                <label for="grau">Grau:</label><br>
+                <input type="text" id="grau" name="grau" required><br><br>
+                <button type="submit" class="register-btn">Registrar</button>
+            </form>
+        </div>
+        </form>
+    </div>
+    <div class="menu" id="profile-menu" style="display:none;">
+        <h3>Perfil</h3>
+        <p id="user-name">Nome: [Usuário]</p>
+        <p id="user-phone">Telefone: [Telefone]</p>
+        <p id="user-gender">Gênero: [Gênero]</p>
+        <p id="user-scale">Escala: [Escala]</p>
+        <p id="user-degree">Grau: [Grau]</p>
+    </div>
+    <div class="main-content" id="main-content" style="display:none;">
+        <h2>Próximo Encontro: <span id="next-meeting-date">[Data]</span></h2>
+        <button class="big-button" onclick="navigateTo('escala')">Escalas de trabalhos</button>
+        <button class="big-button" onclick="navigateTo('lanche')">Lanche coletivo</button>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function showRegisterForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+
+        function navigateTo(page) {
+            window.location.href = page + '.html';
+        }
+
+        function loginSuccess() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('profile-menu').style.display = 'block';
+            document.getElementById('main-content').style.display = 'block';
+            // Populate user data dynamically
+        }
+
+        document.querySelector('#register-form form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const userData = {
+                nome: document.getElementById('nome').value,
+                data_nascimento: document.getElementById('data_nascimento').value,
+                telefone: document.getElementById('telefone').value,
+                genero: document.getElementById('genero').value,
+                escala: document.getElementById('escala').value,
+                grau: document.getElementById('grau').value
+            };
+
+            fetch('/save-member', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Usuário registrado com sucesso!');
+                    document.getElementById('register-form').style.display = 'none';
+                    document.getElementById('login-form').style.display = 'block';
+                } else {
+                    alert('Erro ao registrar usuário.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao registrar usuário.');
+            });
+        });
+    </script>
+</body>
+</html>
