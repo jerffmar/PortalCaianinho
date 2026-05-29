@@ -1,175 +1,1324 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_top">
     <title>Portal Caianinho</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1C305C">
+    <link rel="apple-touch-icon" href="https://udv.org.br/thoroazo/2016/09/logo-cebudv-260.png">
+
     <style>
+        /* ... (Estilos CSS anteriores mantidos) ... */
+        :root {
+            --azul-anil: #1C305C;
+            --verde-floresta: #006400;
+            --amarelo-queimado: #E59400;
+            --laranja-alerta: #D35400;
+            --vermelho-erro: #c0392b;
+            --verde-sucesso: #27ae60;
+            --branco: #FFFFFF;
+            --cinza-claro: #f4f4f9;
+            --texto-escuro: #333333;
+            --cinza-desativado: #A9A9A9;
+        }
+
         body {
-            background-color: #4169E1; /* Azul anil */
-            color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--azul-anil);
+            background-image: linear-gradient(135deg, #1C305C 0%, #2a447c 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--texto-escuro);
+            overscroll-behavior-y: none;
+        }
+
+        .app-container {
+            background: var(--branco);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid var(--verde-floresta);
+            transition: max-width 0.5s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .app-container.dashboard-mode {
+            max-width: 1100px;
+            width: 95%;
+            max-height: 95vh;
+        }
+
+        h1,
+        h2,
+        h3 {
             text-align: center;
-            padding: 50px;
+            color: var(--azul-anil);
+            margin-bottom: 20px;
         }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            color: black;
+
+        .logo {
+            display: block;
+            margin: 0 auto 15px auto;
+            max-width: 100%;
+            width: 200px;
+            height: auto;
         }
+
+        label {
+            font-weight: 600;
+            color: var(--azul-anil);
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--azul-anil);
+            outline: none;
+        }
+
+        .radio-group-container {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0 15px 0;
+            justify-content: center;
+            background: var(--cinza-claro);
+            padding: 10px;
+            border-radius: 6px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: var(--texto-escuro);
+            font-size: 0.9em;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 5px;
+            transform: scale(1.1);
+            accent-color: var(--verde-floresta);
+            margin-bottom: 0;
+            width: auto;
+        }
+
         button {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            margin-top: 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            filter: brightness(90%);
+        }
+
+        .btn-primary {
+            background-color: var(--verde-floresta);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--amarelo-queimado);
+            color: white;
+        }
+
+        .btn-back {
+            background-color: var(--azul-anil);
+            color: white;
+            width: auto;
+            padding: 8px 15px;
+            font-size: 0.8em;
+        }
+
+        .btn-install {
+            background: transparent;
+            border: 1px dashed var(--azul-anil);
+            color: var(--azul-anil);
+            font-size: 0.8em;
+            margin-top: 20px;
+            text-transform: none;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-available {
+            background-color: var(--verde-floresta);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            cursor: pointer;
+            width: auto;
+            margin-top: 0;
+            text-transform: none;
+        }
+
+        .btn-disabled {
+            background-color: var(--cinza-desativado);
+            color: white;
+            cursor: not-allowed;
+            pointer-events: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+        }
+
+        .badge-mine-container {
+            display: flex;
+            align-items: center;
+            background-color: #e8f5e9;
+            color: var(--verde-floresta);
+            padding: 4px 4px 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            border: 1px solid var(--verde-floresta);
+        }
+
+        .badge-taken {
+            background-color: #eee;
+            color: #777;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel {
+            background-color: var(--laranja-alerta);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            padding: 0;
+        }
+
+        .info-card {
+            background: var(--cinza-claro);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--amarelo-queimado);
+        }
+
+        .admin-only {
+            display: none;
+        }
+
+        .session-info-banner {
+            background-color: #e3f2fd;
+            border-left: 5px solid var(--azul-anil);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .session-info-banner h4 {
+            margin: 0 0 10px 0;
+            color: var(--azul-anil);
+            font-size: 1.1em;
+        }
+
+        .session-info-details {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .session-date-time {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .orga-badge {
+            display: inline-block;
+            background: var(--amarelo-queimado);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+
+        .alert-box {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .alert-box.warning {
+            background-color: #fdecea;
+            border-left: 5px solid var(--vermelho-erro);
+            color: var(--vermelho-erro);
+        }
+
+        .alert-box.success {
+            background-color: #e8f5e9;
+            border-left: 5px solid var(--verde-sucesso);
+            color: var(--verde-floresta);
+        }
+
+        .dashboard-layout {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .dashboard-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+
+            .app-container.dashboard-mode {
+                max-width: 500px;
+                max-height: 90vh;
+            }
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .nav-btn {
+            width: auto;
+            padding: 4px 8px;
+            background: var(--azul-anil);
+            color: white;
+            margin: 0;
+        }
+
+        .calendar-body {
+            display: flex;
+            gap: 15px;
+            flex: 1;
+            flex-direction: row;
+        }
+
+        @media (max-width: 600px) {
+            .calendar-body {
+                flex-direction: column;
+            }
+
+            .session-list-wrapper {
+                border-left: none;
+                border-top: 1px solid #eee;
+                padding-top: 10px;
+            }
+        }
+
+        .calendar-grid-wrapper {
+            flex: 3;
+        }
+
+        .session-list-wrapper {
+            flex: 2;
+            border-left: 1px solid #eee;
+            padding-left: 10px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            text-align: center;
+        }
+
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+            border-radius: 50%;
+            font-size: 0.8em;
             cursor: pointer;
         }
-        .login-btn {
-            background-color: #4CAF50;
-            color: white;
+
+        .cal-day:hover {
+            background: #eee;
         }
-        .register-btn {
-            background-color: #008CBA;
+
+        .cal-day.has-event {
             color: white;
+            font-weight: bold;
         }
-        .menu {
+
+        .session-list-item {
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            background: #fcfcfc;
+            border-left: 4px solid #ccc;
+        }
+
+        .session-date-row {
+            font-weight: bold;
+            font-size: 0.95em;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .session-name-row {
+            font-weight: 600;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .session-desc-row {
+            color: #666;
+            display: block;
+            line-height: 1.3;
+        }
+
+        .modal-overlay {
             position: fixed;
             top: 0;
-            right: 0;
-            width: 200px;
-            background-color: #f4f4f4;
-            height: 100%;
-            padding: 20px;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .menu h3 {
-            margin-top: 0;
-        }
-        .main-content {
-            margin-right: 220px;
-            padding: 20px;
-        }
-        .big-button {
-            display: block;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            margin: 10px 0;
-            font-size: 18px;
-            text-align: center;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
-        .big-button:hover {
-            background-color: #45a049;
+
+        .modal-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .active-view {
+            display: block;
+        }
+
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: none;
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--azul-anil);
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--amarelo-queimado);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        #sync-toast {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--azul-anil);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.85em;
+            display: none;
+            z-index: 90;
+        }
+
+        #sync-toast.error {
+            background: var(--laranja-alerta);
+        }
+
+        .detail-row {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-meta {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* ESTILOS PARA PREPARO */
+        .distribuicao-list {
+            margin-top: 10px;
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .distribuicao-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            background: #fff;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .btn-small-add {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.8em;
+            background: var(--azul-anil);
+            color: white;
+            margin-top: 5px;
+        }
+
+        .btn-small-remove {
+            width: auto;
+            padding: 2px 6px;
+            background: var(--laranja-alerta);
+            color: white;
+            font-size: 0.7em;
+            margin: 0;
+        }
+
+        .auxiliar-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: var(--azul-anil);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            border: 1px solid #bbdefb;
+            font-weight: 500;
         }
     </style>
 </head>
+
 <body>
-    <h1>Welcome to Portal Caianinho</h1>
-    <div class="container">
-        <form id="login-form">
-            <label for="username">Usuário:</label><br>
-            <input type="text" id="username" name="username" required><br><br>
-            <label for="password">Senha:</label><br>
-            <input type="password" id="password" name="password" required><br><br>
-            <button type="submit" class="login-btn">Login</button>
-            <button type="button" class="register-btn" onclick="showRegisterForm()">Registrar-se</button>
-        </form>
-        <div id="register-form" style="display:none;">
-            <h2>Registrar-se</h2>
-            <form>
-                <label for="nome">Nome:</label><br>
-                <input type="text" id="nome" name="nome" required><br><br>
-                <label for="data_nascimento">Data de Nascimento:</label><br>
-                <input type="date" id="data_nascimento" name="data_nascimento" required><br><br>
-                <label for="telefone">Telefone:</label><br>
-                <input type="tel" id="telefone" name="telefone" required><br><br>
-                <label for="genero">Gênero:</label><br>
-                <select id="genero" name="genero" required>
-                    <option value="masculino">Masculino</option>
-                    <option value="feminino">Feminino</option>
-                    <option value="outro">Outro</option>
-                </select><br><br>
-                <label for="escala">Escala:</label><br>
-                <input type="text" id="escala" name="escala" required><br><br>
-                <label for="grau">Grau:</label><br>
-                <input type="text" id="grau" name="grau" required><br><br>
-                <button type="submit" class="register-btn">Registrar</button>
+
+    <div class="app-container">
+        <div id="loading">
+            <div class="spinner"></div>
+            <div>Processando...</div>
+        </div>
+        <div id="sync-toast">☁️ Salvando...</div>
+
+        <!-- MODAL NOVA SESSÃO (COMUM) -->
+        <div id="session-modal" class="modal-overlay" onclick="closeSessionModal()">
+            <div class="modal-card" onclick="event.stopPropagation()">
+                <h3>Agendar Sessão</h3>
+                <form id="sessionForm" onsubmit="handleNewSession(event)">
+                    <label>Tipo de Sessão:</label>
+                    <select name="tipo" required onchange="toggleSessionScale(this.value)">
+                        <option value="Sessão de Escala">Sessão de Escala</option>
+                        <option value="Sessão Extra">Sessão Extra</option>
+                        <option value="Sessão de Escala Anual">Sessão de Escala Anual</option>
+                        <option value="Sessão Instrutiva">Sessão Instrutiva</option>
+                        <!-- Preparo removido daqui pois terá botão próprio -->
+                    </select>
+                    <label>Data:</label>
+                    <input type="date" name="data" required>
+                    <label>Hora:</label>
+                    <input type="time" name="hora" required>
+                    <div id="session-scale-selector">
+                        <label>Escala da Sessão:</label>
+                        <div class="radio-group-container">
+                            <label class="radio-option"><input type="radio" name="escala" value="VERDE"> Verde</label>
+                            <label class="radio-option"><input type="radio" name="escala" value="AMARELA">
+                                Amarela</label>
+                            <label class="radio-option"><input type="radio" name="escala" value="TODOS" checked>
+                                Todos</label>
+                        </div>
+                    </div>
+                    <label>Descrição (Max 140 chars):</label>
+                    <textarea name="descricao" rows="3" maxlength="140" placeholder="Detalhes..."
+                        oninput="updateCharCount(this)"></textarea>
+                    <div style="text-align:right; font-size:0.8em; color:#777;"><span id="char-count">0</span>/140</div>
+                    <button type="submit" class="btn-primary">Agendar</button>
+                    <button type="button" class="btn-secondary" style="background:#ccc; color:#333"
+                        onclick="closeSessionModal()">Cancelar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL AGENDAR PREPARO (NOVO) -->
+        <div id="preparo-modal" class="modal-overlay" onclick="closePreparoModal()">
+            <div class="modal-card" onclick="event.stopPropagation()">
+                <h3 style="color:var(--azul-anil)">Agendar Preparo</h3>
+                <form id="preparoForm" onsubmit="handleNewPreparo(event)">
+                    <label>Início do Preparo (Data):</label>
+                    <input type="date" name="data_inicio" required>
+                    <label>Hora Início:</label>
+                    <input type="time" name="hora_inicio" required>
+
+                    <label>Fim do Preparo (Data):</label>
+                    <input type="date" name="data_fim" required>
+
+                    <label>Marcação de Distribuição:</label>
+                    <div class="distribuicao-list" id="distribuicao-list">
+                        <!-- Itens dinâmicos -->
+                        <p style="text-align:center; color:#999; font-size:0.8em; margin:5px;">Nenhuma distribuição
+                            marcada.</p>
+                    </div>
+                    <div style="display:flex; gap:5px; align-items:end;">
+                        <div style="flex:1;"><input type="date" id="dist-date"></div>
+                        <div style="flex:1;"><input type="time" id="dist-time"></div>
+                        <button type="button" class="btn-small-add" onclick="addDistribuicao()">Add</button>
+                    </div>
+
+                    <label>Descrição Geral:</label>
+                    <textarea name="descricao" rows="2" maxlength="140" placeholder="Observações..."></textarea>
+
+                    <button type="submit" class="btn-primary" style="background-color:#8E44AD;">Agendar Preparo</button>
+                    <button type="button" class="btn-secondary" style="background:#ccc; color:#333"
+                        onclick="closePreparoModal()">Cancelar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL DETALHES DO DIA -->
+        <div id="details-modal" class="modal-overlay" onclick="closeDetailsModal()">
+            <div class="modal-card" onclick="event.stopPropagation()">
+                <h3 id="details-date-title" style="color:var(--azul-anil); margin-top:0;">Detalhes do Dia</h3>
+                <div id="details-content"></div>
+                <button class="btn-primary" onclick="closeDetailsModal()">Fechar</button>
+            </div>
+        </div>
+
+        <!-- MODAL DE INSTALAÇÃO (PWA) -->
+        <div id="install-modal" class="modal-overlay" onclick="closeInstallModal()">
+            <div class="modal-card" onclick="event.stopPropagation()" style="text-align:center;">
+                <img src="https://udv.org.br/thoroazo/2016/09/logo-cebudv-260.png"
+                    style="max-width: 60px; margin-bottom: 15px;" alt="Logo UDV">
+                <h3 style="color:var(--azul-anil); margin-top:0;">Instalar Aplicativo</h3>
+                <p id="install-instructions"
+                    style="font-size:0.9em; color:#555; text-align:left; line-height:1.5; margin-bottom:20px;">
+                    <!-- Instruções inseridas via JS -->
+                </p>
+                <button class="btn-primary" onclick="closeInstallModal()">Entendi</button>
+            </div>
+        </div>
+
+        <!-- VIEW: LOGIN -->
+        <div id="view-login" class="view active-view">
+            <img src="https://udv.org.br/thoroazo/2016/09/logo-cebudv-260.png" class="logo" alt="Logo">
+            <h1>Portal Caianinho</h1>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <label>Login (Telefone):</label>
+                <input type="tel" name="username" placeholder="Apenas números (11 dígitos)" required maxlength="11" pattern="\d{11}" oninput="this.value = this.value.replace(/\D/g, '').substring(0, 11)">
+                <label>Senha (Data Nascimento):</label>
+                <input type="password" name="password" placeholder="DDMMYYYY" required>
+                <button type="submit" class="btn-primary">Entrar</button>
+                <button type="button" class="btn-secondary" onclick="showView('view-register')">Criar Conta</button>
+            </form>
+            <button id="btn-install-app" class="btn-install" onclick="showInstallModal()" style="display:none;">📲
+                Instalar App no Celular</button>
+        </div>
+
+        <!-- VIEW: REGISTER -->
+        <div id="view-register" class="view">
+            <h2>Novo Cadastro</h2>
+            <button class="btn-back" onclick="showView('view-login')">← Voltar</button>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <label>Nome Completo:</label>
+                <input type="text" name="nome" required>
+                <label>Data de Nascimento:</label>
+                <input type="date" name="data_nascimento" required>
+                <label>Telefone (Será seu Login):</label>
+                <input type="tel" name="telefone" placeholder="Apenas números (11 dígitos)" required maxlength="11" pattern="\d{11}" oninput="this.value = this.value.replace(/\D/g, '').substring(0, 11)">
+                <label>Gênero:</label>
+                <div class="radio-group-container">
+                    <label class="radio-option"><input type="radio" name="genero" value="Masculino" required>
+                        Masculino</label>
+                    <label class="radio-option"><input type="radio" name="genero" value="Feminino" required>
+                        Feminino</label>
+                </div>
+                <label>Grau:</label>
+                <select name="grau" required>
+                    <option value="Sócio">Sócio</option>
+                    <option value="Corpo Instrutivo">Corpo Instrutivo</option>
+                    <option value="Conselho">Conselho</option>
+                    <option value="Mestre">Mestre</option>
+                </select>
+                <label>Escala:</label>
+                <div class="radio-group-container">
+                    <label class="radio-option"><input type="radio" name="escala" value="VERDE" required> Verde</label>
+                    <label class="radio-option"><input type="radio" name="escala" value="AMARELA" required>
+                        Amarela</label>
+                </div>
+                <button type="submit" class="btn-primary">Confirmar Registro</button>
             </form>
         </div>
-        </form>
+
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="view">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <div>
+                    <h2 id="welcome-msg" style="margin:0; text-align:left;">Bem-vindo</h2>
+                    <span id="user-role-badge"
+                        style="font-size:0.8em; background:#eee; padding:2px 8px; border-radius:10px;">Cargo</span>
+                </div>
+                <button onclick="logout()"
+                    style="width:auto; background:var(--laranja-alerta); padding:8px 15px; font-size:0.8em; margin:0;">Sair</button>
+            </div>
+
+            <div id="dashboard-session-banner" class="session-info-banner">
+                <h4>Próxima Sessão: <span class="sessao-nome"></span></h4>
+                <div class="session-info-details">
+                    <span class="session-date-time">📅 <span class="sessao-data"></span> - ⏰ <span
+                            class="sessao-hora"></span></span>
+                    👥 Escala: <strong class="sessao-escala"></strong><br>
+                    <span class="orga-badge">Orgã: <span class="sessao-orga"></span></span>
+                    <div class="auxiliares-wrapper" style="margin-top: 8px; display: none;">
+                        <span style="font-size: 0.85em; font-weight: bold; color: var(--azul-anil);">Auxiliares:</span>
+                        <div class="sessao-auxiliares" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alert-lanche" class="alert-box"></div>
+            <div id="alert-escala" class="alert-box"></div>
+
+            <div class="dashboard-layout">
+                <div class="dashboard-column">
+                    <h3
+                        style="margin-top:0; color:var(--azul-anil); font-size:1.1em; border-bottom:1px solid #eee; padding-bottom:10px;">
+                        Ações</h3>
+                    <button class="btn-primary" onclick="loadLanches()">🍔 Lanche Coletivo</button>
+                    <button class="btn-secondary" onclick="loadEscalas()">📅 Escalas de Trabalho</button>
+                </div>
+                <div class="dashboard-column">
+                    <div class="calendar-header">
+                        <button class="nav-btn" onclick="changeMonth(-1)">❮</button>
+                        <h3 id="calendar-month-year">Mês Ano</h3>
+                        <button class="nav-btn" onclick="changeMonth(1)">❯</button>
+                    </div>
+                    <div class="calendar-body">
+                        <div class="calendar-grid-wrapper">
+                            <div class="calendar-grid" id="calendar-grid"></div>
+                        </div>
+                        <div class="session-list-wrapper" id="session-list"></div>
+                    </div>
+                    <button class="btn-primary admin-only" onclick="openSessionModal()" style="margin-top:10px;">+
+                        Agendar Sessão</button>
+                    <button class="btn-primary admin-only" onclick="openPreparoModal()"
+                        style="margin-top:10px; background-color:#8E44AD;">+ Agendar Preparo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: LANCHES -->
+        <div id="view-lanches" class="view">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2 style="margin:0;">Lanches</h2>
+                <button class="btn-back" onclick="showView('view-dashboard')">Voltar</button>
+            </div>
+            <div id="lanches-session-banner" class="session-info-banner">
+                <h4>Próxima Sessão: <span class="sessao-nome"></span></h4>
+                <div class="session-info-details">
+                    <span class="session-date-time">📅 <span class="sessao-data"></span> - ⏰ <span
+                            class="sessao-hora"></span></span>
+                    👥 Escala: <strong class="sessao-escala"></strong><br>
+                    <span class="orga-badge">Orgã: <span class="sessao-orga"></span></span>
+                    <div class="auxiliares-wrapper" style="margin-top: 8px; display: none;">
+                        <span style="font-size: 0.85em; font-weight: bold; color: var(--azul-anil);">Auxiliares:</span>
+                        <div class="sessao-auxiliares" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-only" style="display:flex; gap:8px; margin-bottom:20px;">
+                <input type="text" id="newFoodInput" placeholder="Adicionar item..." style="margin:0;">
+                <button onclick="addNewFood()" class="btn-secondary" style="margin:0; width:60px;">+</button>
+            </div>
+            <div id="lanches-list"></div>
+        </div>
+
+        <!-- VIEW: ESCALAS -->
+        <div id="view-escalas" class="view">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2 style="margin:0;">Escalas</h2>
+                <button class="btn-back" onclick="showView('view-dashboard')">Voltar</button>
+            </div>
+            <div id="escalas-session-banner" class="session-info-banner">
+                <h4>Próxima Sessão: <span class="sessao-nome"></span></h4>
+                <div class="session-info-details">
+                    <span class="session-date-time">📅 <span class="sessao-data"></span> - ⏰ <span
+                            class="sessao-hora"></span></span>
+                    👥 Escala: <strong class="sessao-escala"></strong><br>
+                    <span class="orga-badge">Orgã: <span class="sessao-orga"></span></span>
+                    <div class="auxiliares-wrapper" style="margin-top: 8px; display: none;">
+                        <span style="font-size: 0.85em; font-weight: bold; color: var(--azul-anil);">Auxiliares:</span>
+                        <div class="sessao-auxiliares" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-only" style="display:flex; gap:8px; margin-bottom:20px;">
+                <input type="text" id="newTaskInput" placeholder="Criar tarefa..." style="margin:0;">
+                <button onclick="addNewEscala()" class="btn-secondary" style="margin:0; width:60px;">+</button>
+            </div>
+            <div id="escalas-list"></div>
+        </div>
+
     </div>
-    <div class="menu" id="profile-menu" style="display:none;">
-        <h3>Perfil</h3>
-        <p id="user-name">Nome: [Usuário]</p>
-        <p id="user-phone">Telefone: [Telefone]</p>
-        <p id="user-gender">Gênero: [Gênero]</p>
-        <p id="user-scale">Escala: [Escala]</p>
-        <p id="user-degree">Grau: [Grau]</p>
-    </div>
-    <div class="main-content" id="main-content" style="display:none;">
-        <h2>Próximo Encontro: <span id="next-meeting-date">[Data]</span></h2>
-        <button class="big-button" onclick="navigateTo('escala')">Escalas de trabalhos</button>
-        <button class="big-button" onclick="navigateTo('lanche')">Lanche coletivo</button>
-    </div>
-    <script src="script.js"></script>
+
     <script>
-        function showRegisterForm() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('register-form').style.display = 'block';
+        function getFirstAndSecondName(fullName) {
+            if (!fullName) return '';
+            const parts = fullName.trim().split(/\s+/);
+            if (parts.length <= 2) return parts.join(' ');
+            const preps = ['de', 'da', 'do', 'dos', 'das', 'e'];
+            if (preps.includes(parts[1].toLowerCase()) && parts.length > 2) {
+                return parts.slice(0, 3).join(' ');
+            }
+            return parts.slice(0, 2).join(' ');
         }
 
-        function navigateTo(page) {
-            window.location.href = page + '.html';
+        let currentUser = null;
+        let currentCalendarDate = new Date();
+        let sessionsData = [];
+        let lanchesContext = { items: [], nextSession: null, orga: "N/A", auxiliares: [] };
+        let escalasContext = { items: [], nextSession: null, orga: "N/A", auxiliares: [] };
+        let calculatedNextSession = null;
+        let distribuicoesTemp = [];
+
+        window.onload = function () { checkSession(); checkInstallation(); };
+
+        // --- PWA ---
+        function checkInstallation() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (!isStandalone) {
+                const btn = document.getElementById('btn-install-app');
+                if (btn) btn.style.display = 'block';
+            }
+        }
+        function showInstallModal() {
+            const modal = document.getElementById('install-modal');
+            const instructions = document.getElementById('install-instructions');
+            const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+            if (isIOS) {
+                instructions.innerHTML = `Para instalar no <strong>iPhone/iPad</strong>:<br><br>1. Toque no botão <strong>Compartilhar</strong> <span style='font-size:1.2em'>⎋</span>.<br>2. Toque em <strong>"Adicionar à Tela de Início"</strong>.<br>3. Clique em "Adicionar".`;
+            } else {
+                instructions.innerHTML = `Para instalar no <strong>Android</strong>:<br><br>1. Toque no menu de três pontos <strong>(⋮)</strong>.<br>2. Selecione <strong>"Adicionar à tela inicial"</strong> ou "Instalar aplicativo".<br>3. Confirme.`;
+            }
+            modal.style.display = 'flex';
+        }
+        function closeInstallModal() { document.getElementById('install-modal').style.display = 'none'; }
+
+        // --- SESSION & AUTH ---
+        function checkSession() {
+            const storedUser = localStorage.getItem('portalCaianinhoUser');
+            if (storedUser) {
+                try {
+                    currentUser = JSON.parse(storedUser);
+                    setupDashboard();
+                    const view = localStorage.getItem('portalCaianinhoView');
+                    if (view && view !== 'view-login' && view !== 'view-register') {
+                        showView(view);
+                        if (view === 'view-lanches') loadLanches();
+                        if (view === 'view-escalas') loadEscalas();
+                    } else showView('view-dashboard');
+                } catch (e) { logout(); }
+            } else showView('view-login');
         }
 
-        function loginSuccess() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('profile-menu').style.display = 'block';
-            document.getElementById('main-content').style.display = 'block';
-            // Populate user data dynamically
+        function showView(viewId) {
+            localStorage.setItem('portalCaianinhoView', viewId);
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active-view'));
+            document.getElementById(viewId).classList.add('active-view');
+            const container = document.querySelector('.app-container');
+            if (viewId === 'view-dashboard') container.classList.add('dashboard-mode');
+            else container.classList.remove('dashboard-mode');
+            checkPermissions();
         }
 
-        document.querySelector('#register-form form').addEventListener('submit', function (event) {
-            event.preventDefault();
+        function loading(state) { document.getElementById('loading').style.display = state ? 'flex' : 'none'; }
+        function showToast(msg, isError) {
+            const t = document.getElementById('sync-toast'); t.innerText = msg;
+            t.className = isError ? 'error' : ''; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
 
-            const userData = {
-                nome: document.getElementById('nome').value,
-                data_nascimento: document.getElementById('data_nascimento').value,
-                telefone: document.getElementById('telefone').value,
-                genero: document.getElementById('genero').value,
-                escala: document.getElementById('escala').value,
-                grau: document.getElementById('grau').value
+        function handleLogin(e) {
+            e.preventDefault(); loading(true);
+            const f = document.getElementById('loginForm');
+            const cleanUsername = f.username.value.replace(/\D/g, '');
+            google.script.run.withSuccessHandler(res => {
+                loading(false);
+                if (res && res.success) {
+                    currentUser = res.user;
+                    localStorage.setItem('portalCaianinhoUser', JSON.stringify(currentUser));
+                    setupDashboard(); showView('view-dashboard');
+                } else alert((res && res.message) ? res.message : "Erro desconhecido.");
+            }).withFailureHandler(err => { loading(false); alert("Erro: " + err); })
+                .loginUser(cleanUsername, f.password.value);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault(); loading(true);
+            const f = document.getElementById('registerForm');
+            const cleanPhone = f.telefone.value.replace(/\D/g, '');
+            if (cleanPhone.length !== 11) {
+                loading(false);
+                alert("O número de telefone deve conter exatamente 11 dígitos.");
+                return;
+            }
+            const genero = document.querySelector('input[name="genero"]:checked')?.value;
+            const escala = document.querySelector('input[name="escala"]:checked')?.value;
+            const data = {
+                nome: f.nome.value, data_nascimento: f.data_nascimento.value,
+                telefone: cleanPhone, genero: genero,
+                grau: f.grau.value, escala: escala, cargo: ""
             };
+            google.script.run.withSuccessHandler(res => {
+                loading(false);
+                if (res && res.success) { alert(res.message); f.reset(); showView('view-login'); }
+                else alert((res && res.message) ? res.message : "Erro.");
+            }).registerUser(data);
+        }
+        function logout() { currentUser = null; localStorage.clear(); showView('view-login'); }
 
-            fetch('/save-member', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Usuário registrado com sucesso!');
-                    document.getElementById('register-form').style.display = 'none';
-                    document.getElementById('login-form').style.display = 'block';
-                } else {
-                    alert('Erro ao registrar usuário.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao registrar usuário.');
+        function checkPermissions() {
+            const allowedRoles = ["Mestre", "Orgã", "Desenvolvedor"];
+            const canEdit = currentUser && allowedRoles.includes(currentUser.cargo);
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = canEdit ? 'flex' : 'none');
+        }
+
+        function setupDashboard() {
+            if (!currentUser) return;
+            document.getElementById('welcome-msg').innerText = `Olá, ${currentUser.nome.split(' ')[0]}`;
+            document.getElementById('user-role-badge').innerText = currentUser.cargo || 'Membro';
+            loadSessoes(true, () => { checkEnrollment(); });
+            checkPermissions();
+        }
+
+        // --- LOGIC ---
+        function checkEnrollment() {
+            google.script.run.withSuccessHandler(lData => {
+                lanchesContext = lData || { items: [], nextSession: null, orga: "N/A", auxiliares: [] };
+                recalculateNextSession();
+                const sessionToUse = calculatedNextSession || lanchesContext.nextSession;
+                updateSessionBanner('dashboard-session-banner', sessionToUse, lanchesContext.orga, lanchesContext.auxiliares);
+                updateSessionBanner('lanches-session-banner', sessionToUse, lanchesContext.orga, lanchesContext.auxiliares);
+                google.script.run.withSuccessHandler(eData => {
+                    escalasContext = eData || { items: [], nextSession: null, orga: "N/A", auxiliares: [] };
+                    updateSessionBanner('escalas-session-banner', sessionToUse, escalasContext.orga, escalasContext.auxiliares);
+                    evaluateEnrollmentAlert(sessionToUse);
+                }).getEscalas();
+            }).getLanches();
+        }
+
+        function findNextSessionClientSide() {
+            if (!sessionsData || sessionsData.length === 0) return null;
+            const now = new Date();
+            const todayZero = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const future = sessionsData.filter(s => {
+                if (!s.data) return false;
+                const sDate = new Date(s.data);
+                const sDateLocal = new Date(sDate.getUTCFullYear(), sDate.getUTCMonth(), sDate.getUTCDate());
+                return sDateLocal >= todayZero;
             });
-        });
+            future.sort((a, b) => new Date(a.data) - new Date(b.data));
+            return future.length > 0 ? future[0] : null;
+        }
+        function recalculateNextSession() { calculatedNextSession = findNextSessionClientSide(); }
+
+        function evaluateEnrollmentAlert(session) {
+            const alertLanche = document.getElementById('alert-lanche');
+            const alertEscala = document.getElementById('alert-escala');
+            alertLanche.style.display = 'none'; alertEscala.style.display = 'none';
+            if (!session || !currentUser) return;
+            if (session.sessao === 'Preparo') return; // Preparo não tem escala/lanche obrigatório assim
+            if (!canUserJoin(session)) return;
+
+            const myLanches = lanchesContext.items.filter(i => i.pessoa === currentUser.nome);
+            if (myLanches.length > 0) {
+                alertLanche.className = 'alert-box success';
+                alertLanche.innerHTML = `✅ <strong>Lanche:</strong> Você leva: <strong>${myLanches.map(i => i.name).join(', ')}</strong>.`;
+                alertLanche.style.display = 'block';
+            } else {
+                alertLanche.className = 'alert-box warning';
+                alertLanche.innerHTML = `⚠️ <strong>Atenção:</strong> Inscreva-se no <strong>Lanche</strong> de ${session.sessao}.`;
+                alertLanche.style.display = 'block';
+            }
+            const myEscalas = escalasContext.items.filter(i => i.pessoa === currentUser.nome);
+            if (myEscalas.length > 0) {
+                alertEscala.className = 'alert-box success';
+                alertEscala.innerHTML = `✅ <strong>Escala:</strong> Você assumiu: <strong>${myEscalas.map(i => i.name).join(', ')}</strong>.`;
+                alertEscala.style.display = 'block';
+            } else {
+                alertEscala.className = 'alert-box warning';
+                alertEscala.innerHTML = `⚠️ <strong>Atenção:</strong> Assuma uma tarefa na <strong>Escala</strong> de ${session.sessao}.`;
+                alertEscala.style.display = 'block';
+            }
+        }
+
+        function updateSessionBanner(containerId, session, orga, auxiliares) {
+            const banner = document.getElementById(containerId);
+            if (!session) { banner.style.display = 'none'; return; }
+            banner.style.display = 'block';
+            const dateObj = new Date(session.data);
+            const day = String(dateObj.getUTCDate()).padStart(2, '0');
+            const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+            const year = dateObj.getUTCFullYear();
+
+            banner.querySelector('.sessao-nome').innerText = session.sessao;
+            banner.querySelector('.sessao-data').innerText = `${day}/${month}/${year}`;
+            banner.querySelector('.sessao-hora').innerText = session.hora;
+            banner.querySelector('.sessao-escala').innerText = session.escala;
+            banner.querySelector('.sessao-orga').innerText = orga || "Não definido";
+
+            const auxWrapper = banner.querySelector('.auxiliares-wrapper');
+            const auxContainer = banner.querySelector('.sessao-auxiliares');
+            if (auxWrapper && auxContainer) {
+                if (auxiliares && auxiliares.length > 0) {
+                    auxWrapper.style.display = 'block';
+                    auxContainer.innerHTML = auxiliares.map(name => {
+                        const formattedName = getFirstAndSecondName(name);
+                        return `<span class="auxiliar-badge">${formattedName}</span>`;
+                    }).join('');
+                } else {
+                    auxWrapper.style.display = 'none';
+                    auxContainer.innerHTML = '';
+                }
+            }
+        }
+
+        function canUserJoin(session) {
+            if (!session) return false;
+            if (session.escala === 'TODOS') return true;
+            const userScale = (currentUser.escala || "").toUpperCase();
+            const sessionScale = (session.escala || "").toUpperCase();
+            return userScale === sessionScale;
+        }
+
+        function loadLanches(silent) {
+            if (!silent) loading(true);
+            google.script.run.withSuccessHandler(d => {
+                lanchesContext = d || { items: [], nextSession: null, orga: "N/A", auxiliares: [] };
+                renderLanches(); if (!silent) loading(false);
+            }).getLanches();
+        }
+        function renderLanches() {
+            showView('view-lanches');
+            const sessionToUse = calculatedNextSession || lanchesContext.nextSession;
+            updateSessionBanner('lanches-session-banner', sessionToUse, lanchesContext.orga, lanchesContext.auxiliares);
+            const isEligible = canUserJoin(sessionToUse);
+            const l = document.getElementById('lanches-list'); l.innerHTML = '';
+            if (!lanchesContext.items.length) l.innerHTML = '<p style="text-align:center">Lista vazia.</p>';
+            lanchesContext.items.forEach(i => {
+                let btn = '';
+                if (i.pessoa === 'Disponível') {
+                    btn = isEligible ? `<button class="btn-available" onclick="toggleLanche(${i.rowIndex})">Levar</button>` : `<button class="btn-disabled">Levar</button>`;
+                } else if (i.pessoa === currentUser.nome) {
+                    btn = `<div class="badge-mine-container">Eu <button class="btn-cancel" onclick="toggleLanche(${i.rowIndex})">✕</button></div>`;
+                } else {
+                    btn = `<span class="badge-taken">${getFirstAndSecondName(i.pessoa)}</span>`;
+                }
+                l.innerHTML += `<div class="list-item"><strong>${i.name}</strong><div>${btn}</div></div>`;
+            });
+            checkPermissions();
+            if (document.getElementById('alert-lanche').style.display !== 'none') evaluateEnrollmentAlert(sessionToUse);
+        }
+        function addNewFood() {
+            const v = document.getElementById('newFoodInput').value; if (!v) return; loading(true);
+            google.script.run.withSuccessHandler(d => { lanchesContext = d; document.getElementById('newFoodInput').value = ''; renderLanches(); loading(false); }).addLanche(v, currentUser.nome);
+        }
+        function toggleLanche(idx) {
+            showToast("Salvando...", false);
+            google.script.run.withSuccessHandler(r => {
+                if (r && r.success) { lanchesContext = r.data; renderLanches(); showToast("Salvo!", false); checkEnrollment(); }
+                else showToast((r && r.message) ? r.message : "Erro", true);
+            }).updateLancheStatus(idx, currentUser.nome);
+        }
+
+        function loadEscalas(silent) {
+            if (!silent) loading(true);
+            google.script.run.withSuccessHandler(d => {
+                escalasContext = d || { items: [], nextSession: null, orga: "N/A", auxiliares: [] };
+                renderEscalas(); if (!silent) loading(false);
+            }).getEscalas();
+        }
+        function renderEscalas() {
+            showView('view-escalas');
+            const sessionToUse = calculatedNextSession || escalasContext.nextSession;
+            updateSessionBanner('escalas-session-banner', sessionToUse, escalasContext.orga, escalasContext.auxiliares);
+            const isEligible = canUserJoin(sessionToUse);
+            const l = document.getElementById('escalas-list'); l.innerHTML = '';
+            if (!escalasContext.items.length) l.innerHTML = '<p style="text-align:center">Sem tarefas.</p>';
+            escalasContext.items.forEach(i => {
+                let btn = '';
+                if (i.pessoa === 'Disponível') {
+                    btn = isEligible ? `<button class="btn-available" onclick="toggleEscala(${i.rowIndex})">Assumir</button>` : `<button class="btn-disabled">Assumir</button>`;
+                } else if (i.pessoa === currentUser.nome) {
+                    btn = `<div class="badge-mine-container">Eu <button class="btn-cancel" onclick="toggleEscala(${i.rowIndex})">✕</button></div>`;
+                } else {
+                    btn = `<span class="badge-taken">${getFirstAndSecondName(i.pessoa)}</span>`;
+                }
+                l.innerHTML += `<div class="list-item"><strong>${i.name}</strong><div>${btn}</div></div>`;
+            });
+            checkPermissions();
+            if (document.getElementById('alert-escala').style.display !== 'none') evaluateEnrollmentAlert(sessionToUse);
+        }
+        function addNewEscala() {
+            const v = document.getElementById('newTaskInput').value; if (!v) return; loading(true);
+            google.script.run.withSuccessHandler(d => { escalasContext = d; document.getElementById('newTaskInput').value = ''; renderEscalas(); loading(false); }).addEscala(v, currentUser.nome);
+        }
+        function toggleEscala(idx) {
+            showToast("Salvando...", false);
+            google.script.run.withSuccessHandler(r => {
+                if (r && r.success) { escalasContext = r.data; renderEscalas(); showToast("Salvo!", false); checkEnrollment(); }
+                else showToast((r && r.message) ? r.message : "Erro", true);
+            }).updateEscalaStatus(idx, currentUser.nome);
+        }
+
+        function loadSessoes(silent, callback) {
+            if (!silent) loading(true);
+            google.script.run.withSuccessHandler(d => {
+                sessionsData = d || [];
+                renderCalendar();
+                if (!silent) loading(false);
+                if (callback) callback();
+            }).getSessions();
+        }
+        function changeMonth(s) { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + s); renderCalendar(); }
+        function renderCalendar() {
+            const y = currentCalendarDate.getFullYear(), m = currentCalendarDate.getMonth();
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('calendar-month-year').innerText = `${monthNames[m]} ${y}`;
+            const g = document.getElementById('calendar-grid'); g.innerHTML = '';
+            const list = document.getElementById('session-list'); list.innerHTML = '';
+            ["D", "S", "T", "Q", "Q", "S", "S"].forEach(d => g.innerHTML += `<div class="cal-day-header">${d}</div>`);
+            const firstDay = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            for (let i = 0; i < firstDay; i++) g.innerHTML += `<div class="cal-day empty"></div>`;
+            let monthSessions = [];
+            for (let d = 1; d <= daysInMonth; d++) {
+                const sess = sessionsData.find(s => {
+                    if (!s || !s.data) return false;
+                    const date = new Date(s.data);
+                    return date.getUTCDate() === d && date.getUTCMonth() === m && date.getUTCFullYear() === y;
+                });
+                let style = sess ? `background-color:${sess.cor}; color:white; font-weight:bold;` : '';
+                let dayEl = document.createElement('div');
+                dayEl.className = 'cal-day' + (sess ? ' has-event' : '');
+                if (style) dayEl.style.cssText = style;
+                dayEl.innerText = d;
+                if (sess) {
+                    dayEl.onclick = () => openDayDetails(d, m, y, [sess]);
+                    monthSessions.push({ ...sess, day: d });
+                }
+                g.appendChild(dayEl);
+            }
+            if (monthSessions.length === 0) list.innerHTML = '<span style="font-size:0.8em;text-align:center;display:block;color:#999;padding:10px;">Sem sessões este mês.</span>';
+            else {
+                monthSessions.sort((a, b) => a.day - b.day);
+                monthSessions.forEach(s => {
+                    list.innerHTML += `
+                <div class="session-list-item" style="border-left-color:${s.cor}">
+                    <div class="session-date-row" style="color:${s.cor}">${s.day}/${m + 1} - ${s.hora}</div>
+                    <div class="session-name-row">${s.sessao}</div>
+                    <div class="session-desc-row">${s.descricao || ''}</div>
+                </div>`;
+                });
+            }
+            checkPermissions();
+        }
+
+        function openDayDetails(day, month, year, sessions) {
+            const modal = document.getElementById('details-modal');
+            const title = document.getElementById('details-date-title');
+            const content = document.getElementById('details-content');
+            title.innerText = `Detalhes do Dia ${day}/${month + 1}/${year}`;
+            content.innerHTML = '';
+            sessions.forEach(s => {
+                let createdInfo = '';
+                if (s.criado_por && s.criado_em) createdInfo = `<div class="detail-meta">Agendado por: <strong>${s.criado_por}</strong> em ${s.criado_em}</div>`;
+
+                let extraInfo = '';
+                if (s.sessao === 'Preparo') {
+                    const dtFim = s.data_fim ? new Date(s.data_fim).toLocaleDateString('pt-BR') : 'N/A';
+                    extraInfo = `<div style="font-size:0.9em; margin-top:5px;"><strong>Fim:</strong> ${dtFim}<br><strong>Distribuições:</strong> ${s.distribuicoes || 'Nenhuma'}</div>`;
+                }
+
+                content.innerHTML += `
+             <div class="detail-row">
+               <h4 style="margin:0; color:${s.cor}">${s.sessao}</h4>
+               <div>⏰ ${s.hora}</div>
+               <div>👥 Escala: <strong>${s.escala}</strong></div>
+               ${s.descricao ? `<div style="background:#f9f9f9; padding:5px; margin-top:5px; font-style:italic;">${s.descricao}</div>` : ''}
+               ${extraInfo}
+               ${createdInfo}
+             </div>`;
+            });
+            modal.style.display = 'flex';
+        }
+        function closeDetailsModal() { document.getElementById('details-modal').style.display = 'none'; }
+
+        // --- SESSÃO MODAL ---
+        function openSessionModal() { document.getElementById('session-modal').style.display = 'flex'; }
+        function closeSessionModal() { document.getElementById('session-modal').style.display = 'none'; }
+        function toggleSessionScale(type) { document.getElementById('session-scale-selector').style.display = (type === 'Preparo') ? 'none' : 'block'; }
+        function updateCharCount(el) { document.getElementById('char-count').innerText = el.value.length; }
+        function handleNewSession(e) {
+            e.preventDefault(); loading(true);
+            const f = document.getElementById('sessionForm');
+            let escalaVal = 'TODOS';
+            if (f.tipo.value !== 'Preparo') {
+                const selectedRadio = document.querySelector('input[name="escala"]:checked');
+                if (selectedRadio) escalaVal = selectedRadio.value;
+            }
+            const data = { tipo: f.tipo.value, data: f.data.value, hora: f.hora.value, descricao: f.descricao.value, escala: escalaVal };
+            google.script.run.withSuccessHandler(r => {
+                loading(false);
+                if (r && r.success) { alert("Agendada!"); sessionsData = r.data || []; renderCalendar(); closeSessionModal(); f.reset(); }
+                else alert((r && r.message) ? r.message : "Erro.");
+            }).addSession(data, currentUser.nome);
+        }
+
+        // --- PREPARO MODAL ---
+        function openPreparoModal() {
+            distribuicoesTemp = []; renderDistribuicoes();
+            document.getElementById('preparoForm').reset();
+            document.getElementById('preparo-modal').style.display = 'flex';
+        }
+        function closePreparoModal() { document.getElementById('preparo-modal').style.display = 'none'; }
+
+        function addDistribuicao() {
+            const d = document.getElementById('dist-date').value;
+            const t = document.getElementById('dist-time').value;
+            if (d && t) {
+                distribuicoesTemp.push(`${d} às ${t}`);
+                renderDistribuicoes();
+                document.getElementById('dist-date').value = '';
+                document.getElementById('dist-time').value = '';
+            }
+        }
+        function renderDistribuicoes() {
+            const list = document.getElementById('distribuicao-list');
+            list.innerHTML = '';
+            if (distribuicoesTemp.length === 0) list.innerHTML = '<p style="text-align:center; color:#999; font-size:0.8em; margin:5px;">Nenhuma distribuição marcada.</p>';
+            distribuicoesTemp.forEach((item, index) => {
+                list.innerHTML += `<div class="distribuicao-item"><span>${item}</span><button type="button" class="btn-small-remove" onclick="removeDist(${index})">X</button></div>`;
+            });
+        }
+        function removeDist(i) { distribuicoesTemp.splice(i, 1); renderDistribuicoes(); }
+
+        function handleNewPreparo(e) {
+            e.preventDefault(); loading(true);
+            const f = document.getElementById('preparoForm');
+            // Usa a mesma função addSession, mas com dados extras
+            const data = {
+                tipo: 'Preparo',
+                data: f.data_inicio.value, // Data inicio vira DATA principal
+                hora: f.hora_inicio.value,
+                descricao: f.descricao.value,
+                escala: 'TODOS',
+                data_fim: f.data_fim.value,
+                distribuicoes: distribuicoesTemp
+            };
+            google.script.run.withSuccessHandler(r => {
+                loading(false);
+                if (r && r.success) { alert("Preparo Agendado!"); sessionsData = r.data || []; renderCalendar(); closePreparoModal(); }
+                else alert((r && r.message) ? r.message : "Erro.");
+            }).addSession(data, currentUser.nome);
+        }
+
     </script>
 </body>
+
 </html>
