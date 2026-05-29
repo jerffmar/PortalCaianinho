@@ -156,7 +156,8 @@ function registerUser(form) {
         return { success: false, message: `Você é ${data[i][0]}? Realize o login com o número e sua data de nascimento.` };
       }
     }
-    sheet.appendRow([form.nome, form.data_nascimento, cleanPhone, form.genero, form.escala || "A definir", form.grau, username, password, form.cargo]);
+    const uppercaseName = String(form.nome).toUpperCase().trim();
+    sheet.appendRow([uppercaseName, form.data_nascimento, cleanPhone, form.genero, form.escala || "A definir", form.grau, username, password, form.cargo]);
     logAction(username, 'Cadastro', 'Novo Usuário');
     return { success: true, message: `Cadastro realizado! Login: ${username}, Senha: ${password}` };
   } catch (err) {
@@ -309,7 +310,7 @@ function getSessions() {
       const nomeSessao = String(row[0]).trim();
       let corSessao = '#999999';
       if (nomeSessao.includes('Preparo')) corSessao = '#8E44AD';
-      else if (nomeSessao.includes('Extra')) corSessao = '#E59400';
+      else if (nomeSessao.includes('Extra') || nomeSessao.includes('Casal')) corSessao = '#E59400';
       else if (nomeSessao.includes('Anual')) corSessao = '#1C305C';
       else if (nomeSessao.includes('Instrutiva')) corSessao = '#D35400';
       else if (nomeSessao.includes('Escala')) corSessao = '#006400'; // AGORA É SÓ "Preparo"
